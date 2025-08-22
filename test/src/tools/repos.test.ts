@@ -109,7 +109,7 @@ describe("repos tools", () => {
   });
 
   describe("repo_update_pull_request", () => {
-  // autoCompleteSetBy moved to a dedicated tool: repo_set_pull_request_autocomplete
+    // autoCompleteSetBy moved to a dedicated tool: repo_set_pull_request_autocomplete
     it("should update pull request with all provided fields", async () => {
       configureRepoTools(server, tokenProvider, connectionProvider, userAgentProvider);
 

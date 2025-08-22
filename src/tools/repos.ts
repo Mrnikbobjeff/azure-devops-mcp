@@ -59,6 +59,7 @@ function branchesFilterOutIrrelevantProperties(branches: GitRef[], top: number) 
  * @param comments Array of comments to trim (can be undefined/null)
  * @returns Array of trimmed comment objects with essential properties only
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function trimComments(comments: any[] | undefined | null) {
   return comments
     ?.filter((comment) => !comment.isDeleted) // Exclude deleted comments
@@ -142,33 +143,6 @@ function configureRepoTools(server: McpServer, tokenProvider: () => Promise<Acce
       return {
         content: [{ type: "text", text: JSON.stringify(pullRequest, null, 2) }],
       };
-    }
-  );
-
-  server.tool(
-    REPO_TOOLS.set_pull_request_autocomplete,
-    "Set the auto-complete setter for a pull request.",
-    {
-      repositoryId: z.string().describe("The ID of the repository where the pull request exists."),
-      pullRequestId: z.number().describe("The ID of the pull request to update."),
-      autoCompleteSetBy: z.string().describe("The ID of the user who set the auto complete state."),
-    },
-    async ({ repositoryId, pullRequestId, autoCompleteSetBy }) => {
-      const connection = await connectionProvider();
-      const gitApi = await connection.getGitApi();
-
-      const updateRequest = { autoCompleteSetBy: { id: autoCompleteSetBy } };
-
-      try {
-        const updatedPullRequest = await gitApi.updatePullRequest(updateRequest, repositoryId, pullRequestId);
-        return {
-          content: [{ type: "text", text: JSON.stringify(updatedPullRequest, null, 2) }],
-        };
-      } catch (error) {
-        return {
-          content: [{ type: "text", text: JSON.stringify(error, null, 2) }],
-        };
-      }
     }
   );
 
