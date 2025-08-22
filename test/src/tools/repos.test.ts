@@ -75,7 +75,41 @@ describe("repos tools", () => {
     } as any);
   });
 
+  describe("repo_set_pull_request_autocomplete", () => {
+    it("should set autoCompleteSetBy for a pull request", async () => {
+      configureRepoTools(server, tokenProvider, connectionProvider, userAgentProvider);
+
+      const call = (server.tool as jest.Mock).mock.calls.find(([toolName]) => toolName === REPO_TOOLS.set_pull_request_autocomplete);
+      if (!call) throw new Error("repo_set_pull_request_autocomplete tool not registered");
+      const [, , , handler] = call;
+
+      const mockUpdatedPR = {
+        pullRequestId: 123,
+        autoCompleteSetBy: { id: "user-abc" },
+      };
+      mockGitApi.updatePullRequest.mockResolvedValue(mockUpdatedPR);
+
+      const params = {
+        repositoryId: "repo123",
+        pullRequestId: 123,
+        autoCompleteSetBy: "user-abc",
+      };
+
+      const result = await handler(params);
+
+      expect(mockGitApi.updatePullRequest).toHaveBeenCalledWith(
+        {
+          autoCompleteSetBy: { id: "user-abc" },
+        },
+        "repo123",
+        123
+      );
+      expect(result.content[0].text).toBe(JSON.stringify(mockUpdatedPR, null, 2));
+    });
+  });
+
   describe("repo_update_pull_request", () => {
+  // autoCompleteSetBy moved to a dedicated tool: repo_set_pull_request_autocomplete
     it("should update pull request with all provided fields", async () => {
       configureRepoTools(server, tokenProvider, connectionProvider, userAgentProvider);
 
