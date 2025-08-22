@@ -111,6 +111,7 @@ Interact with these Azure DevOps services:
 - **repo_resolve_comment**: Resolves a specific comment thread on a pull request.
 - **repo_search_commits**: Searches for commits.
 - **repo_create_pull_request_thread**: Creates a new comment thread on a pull request.
+- **repo_get_diff**: Retrieves the list of changes between two commit ids or branches.
 
 ### 🛰️ Builds
 
